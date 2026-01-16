@@ -52,7 +52,7 @@ In the R code chunk below, please provide the code to:
 ```{r}
 rm(list = ls())
 getwd()
-setwd("../Week1-RStudio")
+setwd("../Week1-RStudio/")
 ```
 
 ## 3) USING R AS A CALCULATOR
@@ -373,3 +373,21 @@ Click on his username to assign before you finalize the pull request.
 Please make sure your updated repo include both the PDF and RMarkdown files.
 
 This assignment is due on **Wednesday, January 22^nd^, 2025 at 12:00 PM (noon)**.
+
+```{r}
+# Add, commit, push to Github
+# run from the CONSOLE or TERMINAL
+
+# I had to set my git config again for some reason 
+# system('git config --global user.email "carterstancil@gmail.com"')
+# system('git config --global user.name "carterks"')
+
+# make sure wd is actually correct
+# system("git add 3.RStudio_Worksheet.Rmd")
+# system('git commit -m "Add 3.RStudio_Worksheet.Rmd"')
+# system("git push -u origin main")
+
+# if you get the error "another git process seems to be running..." run the following:
+# file.remove("C:/github/QB2026_Stancil/QB2026/.git/index.lock")
+```
+
