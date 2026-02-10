@@ -47,6 +47,7 @@ getwd()
 setwd("../Week4-Beta/") #change to wherever your wd is 
 library(vegan)
 library(ade4)
+library(indicspecies)
 ```
 
 ## 2) LOADING DATA
@@ -90,8 +91,8 @@ summary(phi)
 ***Question 1***: Based on the PERMANOVA, IndVal, and phi coefficient analyses, what did you learn about the relationship between habitat quality and the fish species composition?
 Are the different analyses consistent with one another and do they agree with the visualizations (heat maps, cluster dendograms, ordinations) that you created?
 
-> ***Answer 1***: 
-
+> ***Answer 1***: Fish communities seemed to be obviously different depending on the quality (high, low, or medium) of the water! It was interesting to see such distinct separation. However, HQ actually had the fewest species, which was very interesting. 
+> I think so? We never created a good figure to show the environmental conditions of each site, so it is difficult to directly compare. 
 
 ### B.  Multivariate Procedures for Continuous Designs
 
@@ -108,13 +109,12 @@ env.dist <- vegdist(scale(doubs$env[-8,]),method = "euclid")
 
 #Mantel Test
 mantel(fish.dist,env.dist)
-
 ```
 
 ***Question 2***: What do the results from our Mantel test suggest about fish diversity and stream environmental conditions? 
 How does this relate to your hypothesis about stream quality influencing fish communities?
 
-> ***Answer 2***:  
+> ***Answer 2***:  The high r value from the Mantel test suggests that the fish community differences and environmental differences are strongly positively correlated. So therefore, when the stream has more nutrients, more species tend to be present. This supports my hypothesis that higher nutrients supports more species. 
 
 ### ii.  Constrained Ordination
 In the R code chunk below, do the following:  
@@ -151,6 +151,12 @@ ordiplot(doubs.dbrda.mod0)
 
 # Define Plot Parameters
 par(mar = c(5, 5, 4, 4) + 0.1)
+
+# Calculate Explained Variation
+dbrda.explainvar1 <- round(doubs.dbrda$CCA$eig[1] / 
+                    sum(c(doubs.dbrda$CCA$eig, doubs.dbrda$CA$eig)), 3) * 100
+dbrda.explainvar2 <- round(doubs.dbrda$CCA$eig[2] / 
+                    sum(c(doubs.dbrda$CCA$eig, doubs.dbrda$CA$eig)), 3) * 100
 
 # Initiate Plot
 plot(scores(doubs.dbrda, display = "wa"), xlim = c(-1.3, 1.1), 
@@ -198,16 +204,12 @@ ordiplot(doubs.dbrda)
 permutest(doubs.dbrda, permutations = 999)
 envfit(doubs.dbrda, env.chem[,c(4,6,7)], perm = 999)
 
-# Calculate Explained Variation
-dbrda.explainvar1 <- round(doubs.dbrda$CCA$eig[1] / 
-                    sum(c(doubs.dbrda$CCA$eig, doubs.dbrda$CA$eig)), 3) * 100
-dbrda.explainvar2 <- round(doubs.dbrda$CCA$eig[2] / 
-                    sum(c(doubs.dbrda$CCA$eig, doubs.dbrda$CA$eig)), 3) * 100
+
 ```
 
 ***Question 3***: Based on the constrained ordination, what are the environmental variables (or groups of correlated variables) that seem to be contributing to variation in fish community structure?
 
-> ***Answer 3***: 
+> ***Answer 3***: Oxygen and nitrogen seem to be important vectors that are contributing to the variation we observe. Dissolved chemicals.
 
 ### iii. Variation Partitioning
 In the code chunk below,   
@@ -278,4 +280,4 @@ mtext("Variation Partitioning of\nDoubs Fish Diversity", side = 3, line = -3)
 
 ***Question 4***: Interpret the variation partitioning results.   
 
-> ***Answer 4***: 
+> ***Answer 4***: Most of the variation in the fish data is explained by both Environmental and the Space variation. Space alone seems to also explain a large chunk of the fish variation. This means that there are differences along the river that are not directly tied to factors like dissolved oxygen, nitrogen, etc. 
