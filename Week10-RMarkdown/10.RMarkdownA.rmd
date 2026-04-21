@@ -1,0 +1,153 @@
+---
+title: "10.RMarkdown"
+author: "Carter Stancil"
+date: "2026-04-10"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+
+# rmark-exercise.Rmd - R Markdown code for the R Markdown exercise. The "<--" is how you start and end a comment (it is the .html format for comments).
+
+
+# Simple R Markdown exercise
+# The # here is R Markdown for 'Section Heading' -->
+
+# Run this code by clicking the `knitr` button in RStudio or `rmarkdown::render("rmark-exercise.Rmd")` in R.
+
+# To understand what is happening you should compare the code in the `rmark-exercise.Rmd` file with the resulting output in the `rmark-exercise.html`file. Extra comments to help your understanding appear in the `.Rmd` file but do not show up in the resulting `.html` file, so do make sure to look at both. <!-- This is how you do a "chunk" of R code, and call it "setup": -->
+```
+
+
+  
+```{r setup}
+# This option sets the R output in your document to not have ## before it, which
+#  is the default. You can customise pretty much anything (see the R Markdown
+#  book).
+knitr::opts_chunk$set(comment = "")
+# <!-- Note that because the above chunk is R code, the `# This option...` represents a comment because of the `#`. Your text editor should hopefully colour code this file so you can distinguish R Markdown headings and R comments. And, yes, "chunk" is the technical name for these chunks of code. -->
+
+## Generate data
+
+# First we'll need some libraries:
+```
+
+
+# If you do not have any of them then install them by typing, for example,
+```{r packages, eval=FALSE}
+install.packages(kableExtra)
+```
+in your R console (or install using RStudio if you use that).
+```{r rmarklibs}
+library(kableExtra)
+library(tibble)
+library(xtable)
+```
+Now generate some data:
+```{r generate}
+set.seed(42)
+n <- 30                      # sample size
+x <- 1:n
+y <- 10*x + rnorm(n, 0, 10)
+n
+```
+
+We can automatically say that the maximum value of the data is `r max(y)`, or round it to a
+whole number: the maximum value of the data is `r round(max(y))`.
+<!-- The ` r` at
+     the start of each of these tells R Markdown to evaluate the remaining code in
+     R. You use this for short bits of code that you want within sentences, and use
+     chunks for larger bits of code.
+	 The earlier chunk containing ` install.packages(kableExtra)` is not
+     automatically run because of the `eval=FALSE` option at the start of the
+     chunk - scroll up to take a look.
+-->
+
+## Show some of the data
+
+Let's combine the data in a tibble (think of it as a data frame if you don't
+know what that is):
+```{r showdata}
+data <- tibble::tibble(x, y)
+data
+```
+(only the first 10 rows get printed here thanks to it being a tibble).
+
+To have a basic table, we can do
+```{r kable}
+kable(data[1:10,])
+```
+
+To make it look a bit better we can add an option
+```{r kable2}
+kable(data[1:10,]) %>%
+  kable_material("striped")
+```
+
+You can set all sorts of formatting (and do it once at the start for all
+tables) with the `kable` and `kableExtra` packages (see the R Markdown book), so
+don't worry about formatting for now.
+
+## Plot then fit a regression data
+
+Now to plot the data:
+
+```{r plot}
+plot(x, y)
+```
+
+To fit and then print the summary regression output from R:
+
+```{r regression}
+fit <- lm(y ~ x)
+print(summary(fit))
+```
+
+And for a report we can produce a simple table (including a caption) of output and the regression fit:
+
+```{r fit}
+kable(coefficients(summary(fit)),
+      caption = "Linear regression fit.") %>%
+  kable_material("striped")
+```
+
+And create a plot:
+```{r plotfit}
+plot(x, y)
+abline(fit, col="red")
+```
+
+## Now, go back and change the data
+
+The *big* feature of dynamically generating reports is when you go back and
+change or update the input data. For example, changing the data in the above
+example and then re-running it to redo the report. The best way to demonstrate
+this is for you to do it in the Exercise.
+
+See the main document for what to do with this file for the Exercise.
+
+## Automating text
+
+Once you've done the Exercise, you can even get a bit clever with your writing
+by including an R `ifelse` statement to somewhat automate the text, for example:
+
+So the maximum value of $y$ is `r round(max(y))`, which is
+`r ifelse(max(y)>400, paste("greater than"), paste("less than"))` 400.
+
+But you have to be careful and think about all possibilities -- what if
+$y=399.9$?
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
