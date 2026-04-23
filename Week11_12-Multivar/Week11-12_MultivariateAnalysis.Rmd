@@ -1,0 +1,206 @@
+---
+title: "Week11-12_MultivariateAnalysis"
+author: "Carter Kathleen Stancil"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 4.1 Multivariate Resemblance
+# 4.1.1 Binary Similarity Metrics
+```{r}
+species <- c(1:24)
+erie <- c(rep(1, 19), rep(0,5))
+ontario <- c(rep(1,18), 0, 1, 0,0,0,0)
+lksp <- data.frame(species = species,erie = erie, ontario = ontario)
+
+#fixes ordering problem 
+lksp$erie <- factor(lksp$erie, levels = c(1, 0))
+lksp$ontario <- factor(lksp$ontario, levels = c(1, 0))
+
+tlake <- table(lksp[, c("erie", "ontario")])
+
+a = tlake[1, 1]
+b = tlake[1, 2]
+c = tlake[2, 1]
+d = tlake[2, 2]
+
+S_j = a/(a + b + c)
+S_j
+
+S_s = 2 * a/(2 * a + b + c)
+S_s
+```
+### 4.1.2.1 Euclidean Distance
+#### Exercise 1
+Finish the calculation of the Euclidean distance for this data.
+
+```{r}
+#create the dataset
+species <- paste("Species", 1:10)
+sample_j <- c(19, 35, 0, 35, 10, 0, 0, 0, 30, 2)
+sample_k <- c(35, 10, 0, 5, 50, 0, 3, 0, 10, 0)
+
+eu <- data.frame(
+  species  = species,
+  j = sample_j,
+  k = sample_k,
+  sq_diff  = (sample_j - sample_k)^2
+)
+
+#calculate Euclidean distance
+dist(rbind(eu$j, eu$k), method = "euclidean")
+```
+
+# 4.2 Cluster Analysis
+## 4.2.4 Example: Cluster analysis of isotope data
+```{r}
+#install.packages("openxlsx")
+library(openxlsx)
+urlj = "https://doi.org/10.1371/journal.pone.0093281.s001"
+download.file(urlj, "p.xlsx", mode = "wb")
+iso = read.xlsx("p.xlsx")
+```
+```{r}
+plot(iso$N ~ iso$C, col = as.numeric(as.factor(iso$Food.Chain)),
+    xlim = c(-35, 0), pch = as.numeric(as.factor(iso$Species)),
+    xlab = expression(paste(delta, "13C")), ylab = expression(paste(delta,
+        "15N")))
+
+legend("topright", legend = unique(as.factor(iso$Food.Chain)),
+    pch = 1, col = as.numeric(unique(as.factor(iso$Food.Chain))),
+    bty = "n", title = "Food chain")
+
+legend("bottomright", legend = as.character(unique(as.factor(iso$Species))),
+    pch = as.numeric(unique(as.factor(iso$Species))), bty = "n",
+    title = "Species")
+```
+```{r}
+str(iso)
+```
+```{r}
+diso <- dist((iso[, c("C", "N")]), method = "euclidean")
+p = hclust(diso, method = "single", )
+plot(p, cex = 0.5, main = "", xlab = "")
+```
+```{r}
+niso = iso[complete.cases(iso), ]
+niso = niso[-5, ]
+diso <- dist((niso[, c("C", "N")]), method = "euclidean")
+p = hclust(diso, method = "single")
+niso$clust <- cutree(p, k = 4)
+
+# plotting the data with 4 groups identified by the
+# single-linkage cluster analysis superimposed
+plot(niso$N ~ niso$C, col = as.numeric(as.factor(niso$clust)),
+    xlim = c(-35, 0), pch = as.numeric(as.factor(niso$Species)),
+    xlab = expression(paste(delta, "13C")), ylab = expression(paste(delta,
+        "15N")))
+
+legend("topright", legend = unique(as.factor(niso$clust)), pch = 1,
+    col = as.numeric(unique(as.factor(niso$clust))), bty = "n",
+    title = "cluster")
+
+legend("bottomright", legend = as.character(unique(as.factor(niso$Species))),
+    pch = as.numeric(unique(as.factor(niso$Species))), bty = "n",
+    title = "Species")
+```
+#### Exercise 2 
+Try a non-hierarchical cluster analysis on the same data to see if it works better. Use the `kmeans()` function, which requires that we select the required number of clusters (4) ahead of time. Once you have your clustering, plot your results.
+
+```{r}
+kclust <- kmeans(niso[, c("C", "N")],4)
+niso$kclust = kclust$cluster
+
+# superimpose the saved clusters on our plotted isotope
+# data
+plot(iso$N ~ iso$C, col = as.numeric(as.factor(niso$clust)),
+    xlim = c(-35, 0), pch = as.numeric(as.factor(niso$Species)),
+    xlab = expression(paste(delta, "13C")), ylab = expression(paste(delta,
+        "15N")))
+
+legend("topright", legend = unique(as.factor(niso$kclust)), pch = 1,
+    col = as.numeric(unique(as.factor(niso$kclust))), bty = "n",
+    title = "kcluster")
+
+legend("bottomright", legend = as.character(unique(as.factor(niso$Species))),
+    pch = as.numeric(unique(as.factor(niso$Species))), bty = "n",
+    title = "Species")
+```
+### 4.3.4 Example: nMDS and PCoA
+```{r}
+library(vegan)
+data(varespec)
+nMDS <- metaMDS(varespec, trymax = 100, distance = "bray", k = 2,
+    trace = FALSE)
+svarespec = wisconsin(varespec)
+disimvar = vegdist(svarespec, method = "bray")
+
+PCoA <- cmdscale(disimvar, k = 2, eig = T, add = T)
+str(PCoA)
+```
+```{r}
+par(mfrow = c(1, 2))
+ordipointlabel(nMDS, pch = c(NA, NA), cex = c(1.2, 0.6), xlim = c(-0.6,
+    1.2))
+abline(h = 0, col = "grey")
+abline(v = 0, col = "grey")
+
+
+PCoA$species <- wascores(PCoA$points, varespec, expand = TRUE)
+ordipointlabel(PCoA, pch = c(NA, NA), cex = c(1.2, 0.6), xlab = "PCoA1",
+    ylab = "PCoA2", xlim = c(-0.6, 1), ylim = c(-0.5, 0.6))
+abline(h = 0, col = "grey")
+abline(v = 0, col = "grey")
+```
+
+#### Exercise 3 
+Provide an interpretation of the above plots
+> ***Answer 3***: Sites (numbers) that are closer to one another are more similar. The species (red text) are distributed based on their influence on these patterns. This is most easily visible by sites that are more isolated from others and that have a species that is only aligned near them. For example, site 2 may be more different due to Cladcerv spp. 
+
+### 4.4.2 Example: Constrained ordination
+```{r}
+library(vegan)
+data("varespec")
+data("varechem")
+```
+
+```{r}
+plot(varechem, gap = 0, panel = panel.smooth, cex.lab = 1.2,
+    lwd = 2, pch = 16, cex = 0.75, col = rgb(0.5, 0.5, 0.7, 0.8))
+```
+```{r}
+stvarespec = as.data.frame(wisconsin(varespec))
+scvarechem = as.data.frame(scale(varechem))
+constr <- vegan::rda(stvarespec ~ ., data = scvarechem)
+constr
+```
+```{r}
+ord3 = vegan::rda(stvarespec ~ N + K + Al, data = scvarechem)
+ord3
+```
+### 4.4.3 Signficance tests for constrained ordination
+```{r}
+anova(ord3)
+```
+
+```{r}
+anova(ord3, by = "term", permutations = 199)
+```
+
+```{r}
+mfull <- vegan::rda(stvarespec ~ ., data = scvarechem)
+m0 <- vegan::rda(stvarespec ~ 1, data = scvarechem)
+
+optm <- ordiR2step(m0, scope = formula(mfull), trace = FALSE)
+optm$anova
+```
+
+#### Exercise 4 
+Examine the significance test. How does this automatically selected model differ from the full model and your manually selected version?
+> ***Answer 4***: From the full model's 14 elements, we manually selected N, K, and Al. These elements do not appear in the automatically selected model, which identified Fe, P, and Mn as the most signficant predictors.
