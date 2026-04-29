@@ -1,0 +1,392 @@
+---
+title: "Week13-14_Optimization"
+author: "Carter Kathleen Stancil"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Exercise 1
+Consider the following dataset, which corresponds to measurements of drug concentration in the blood over time. try fitting the data to an exponential $C(t) = ae^{-rt}$. You’ll find that the best-fit model is not satisfactory. Next, try fitting a biexponential $C(t) = a_1e^{-r_1t} + a_2e^{-r_2t}$. You’ll find a more suitable agreement. For fitting, you can either use the nls command or the gradient descent function above (along with a sum of squared errors function). For nls, you may find the algorithm is very sensitive to your choice of initial guess (and will fail if the initial guess is not fairly accurate). For gradient descent, you’ll need to use a small stepsize, e.g. $10^{-5}$, and a large number of iterations.
+
+```{r}
+t <- c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
+C <- c(5.585, 4.392, 3.2564, 2.9971, 2.6493, 2.3863, 2.0838,
+    2.0862, 1.7009, 1.7339, 1.4162)
+BE_data = cbind(t, C)
+plot(BE_data)
+
+df <- data.frame(t, C)
+
+# Nonlinear least squares fit
+fit <- nls(
+  C ~ a * exp(-b * t) + c,
+  data = df,
+  start = list(a = 4, b = 0.02, c = 1)
+)
+summary(fit)
+plot(t, C, pch = 19)
+curve(predict(fit, newdata = data.frame(t = x)),
+      add = TRUE, col = "red", lwd = 2)
+```
+#### Exercise 2
+Apply the genetic algorithm with ga to confirm the minimum of the egg-carton function in Example 9.
+```{r}
+# Example 9
+#install.packages("GenSA")
+library(GenSA)
+
+
+f.egg <- function(x) {
+    -(x[ 2] + 47) * sin(sqrt(abs(x[ 2] + (x[ 1]/2) + 47))) -
+        x[ 1] * sin(sqrt(abs(x[ 1] - (x[ 2] + 47)))) + 0.001 *
+        x[ 1]^2 + 0.001 * x[ 2]^2
+}
+```
+
+```{r}
+# define a set of initial guess values
+
+# initial guesses
+x1 <- c(100, 100)
+x2 <- c(0, 100)
+
+# specify bounds
+lower <- rep(-200, 2)
+upper <- rep(200, 2)
+
+
+egg.out1 <- GenSA(par = x1, lower = lower, upper = upper, fn = f.egg)
+egg.out2 <- GenSA(par = x2, lower = lower, upper = upper, fn = f.egg)
+egg.out1[c("value", "par")]
+```
+
+```{r}
+egg.out2[c("value", "par")]
+```
+```{r}
+# Example 10
+#install.packages("GA")
+
+Example_7_fun = function(x, y) {
+    return((1/2 * x^2 + 1/4 * y^2 + 3) + cos(2 * x + 1 - exp(y)))
+}
+
+library(GA)
+ga <- ga(type = "real-valued", fitness = function(x) -Example_7_fun(x[1],
+    x[2]), lower = c(-2, -2), upper = c(2, 2), maxiter = 30)
+
+```
+
+```{r}
+plot(ga)
+```
+
+```{r}
+summary(ga)
+```
+```{r}
+# Exercise 2 Work
+f.egg <- function(x, y) {
+    -(y + 47) * sin(sqrt(abs(y + (x/2) + 47))) - x * sin(sqrt(abs(x -
+        (y + 47)))) + 0.001 * x^2 + 0.001 * y^2
+}
+
+library(GA)
+ga_ex2 <- ga(type = "real-valued", fitness = function(x) -f.egg(x[1],
+    x[2]), lower = c(-200, -200), upper = c(200, 200), maxiter = 30)
+
+plot(ga_ex2)
+
+summary(ga_ex2)
+```
+#### Exercise 3
+Following the process in Example 11, calibrate all four model parameters  
+α, β, γ, and δ to the following dataset, with initial states $x_1(0)=0.01$ and $x_2(0)=1.0$. Use either simulated annealing or a genetic algorithm. You can generate a simulation with the predictions at the time-points corresponding to the observations by setting $Time <- seq(0, 8, by =0.2)$ in the simulation script above. If you have trouble finding a suitable initial guess, try  
+α=10, β=1, γ=1, δ=1.
+```{r}
+t_obs_ex <- c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2,
+    2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 3.8, 4, 4.2, 4.4, 4.6,
+    4.8, 5, 5.2, 5.4, 5.6, 5.8, 6, 6.2, 6.4, 6.6, 6.8, 7, 7.2,
+    7.4, 7.6, 7.8, 8)
+
+x1_obs_ex <- c(0.001, 0.043, 0.18, 0.86, 3.6, 3.24, 0.13, 0.0075,
+    0.00095, 0.0079, 0.00012, 0.00012, 0.00015, 0.00026, 0.00057,
+    0.0016, 0.0052, 0.021, 0.084, 0.39, 1.8, 5.3, 0.72, 0.028,
+    0.0024, 0.01, 0.00019, 0.00013, 0.00013, 0.00019, 0.00037,
+    0.00095, 0.0062, 0.01, 0.04, 0.18, 0.84, 3.6, 3.3, 0.13,
+    0.0091)
+
+x2_obs_ex <- c(0.67, 1.2, 5.1, 0.78, 0.13, 5.7, 8.2, 7.5, 5.6,
+    4.4, 3, 5.3, 2.2, 1.9, 1.4, 1.4, 1.2, 1.1, 2.3, 1.6, 0.25,
+    3.8, 8.4, 8.3, 6.4, 5, 4.5, 1.9, 2.8, 2.9, 1.6, 2, 1.7, 4.2,
+    1.8, 2.7, 1.3, 2, 6.8, 8.7, 7.4)
+```
+
+```{r}
+determine_sse_ex3 <- function(p) {
+
+    # input parameters are the kinetic parameters of the
+    # model
+    newPars <- c(p[1], p[2], p[3], p[4])
+    # initial populations for x1 and x2, respectively
+    newState <- c(x1 = 0.01, x2 = 1)
+
+    # time-grid as specified
+    Time <- seq(0, 8, by = 0.2)
+
+    # model
+    newLotVmod <- function(Time, State, newPars) {
+        with(as.list(c(State, newPars)), {
+            dx1 = x1 * (p[1] - p[2] * x2)
+            dx2 = -x2 * (p[3] - p[4] * x1)
+            return(list(c(dx1, dx2)))
+        })
+    }
+    library(deSolve)
+    # simulation
+    new_out1 <- as.data.frame(ode(func = newLotVmod, y = newState,
+        parms = newPars, times = Time))
+
+    x1_obs_ex <- c(0.001, 0.043, 0.18, 0.86, 3.6, 3.24, 0.13,
+        0.0075, 0.00095, 0.0079, 0.00012, 0.00012, 0.00015, 0.00026,
+        0.00057, 0.0016, 0.0052, 0.021, 0.084, 0.39, 1.8, 5.3,
+        0.72, 0.028, 0.0024, 0.01, 0.00019, 0.00013, 0.00013,
+        0.00019, 0.00037, 0.00095, 0.0062, 0.01, 0.04, 0.18,
+        0.84, 3.6, 3.3, 0.13, 0.0091)
+
+    x2_obs_ex <- c(0.67, 1.2, 5.1, 0.78, 0.13, 5.7, 8.2, 7.5,
+        5.6, 4.4, 3, 5.3, 2.2, 1.9, 1.4, 1.4, 1.2, 1.1, 2.3,
+        1.6, 0.25, 3.8, 8.4, 8.3, 6.4, 5, 4.5, 1.9, 2.8, 2.9,
+        1.6, 2, 1.7, 4.2, 1.8, 2.7, 1.3, 2, 6.8, 8.7, 7.4)
+
+    # determine SSE
+    sse <- sum((x1_obs_ex - new_out1$x1)^2) + sum((x2_obs_ex -
+        new_out1$x2)^2)
+    return(sse)
+}
+```
+
+```{r}
+library(GA)
+ga_ex3 <- ga(type = "real-valued", fitness = function(x) -determine_sse_ex3(c(x[1],
+    x[2], x[3], x[4])), lower = c(0.1, 0.1, 0.1, 0.1), upper = c(20,
+    10, 5, 5), maxiter = 25)
+plot(ga_ex3)
+summary(ga_ex3)
+```
+
+#### Exercise 4
+Consider the task of finding the minimum of the function $f(x,y)=x^4 +y^2$,plotted below. Clearly, the minimum is zero, and numerical optimization routines will have no trouble estimating that solution. However, because the curvature at the minimum is much different along the $-x$ and $-y$ directions, most numerical algorithms will do a better job estimating one parameter compared to the other. This can be well-illustrated by applying the rejection method to this problem and noting the relative spread in the posterior distributions. Implement the rejection algorithm provided above with uniform prior distributions on [-1, 1] for both the $x$ and $y$ values. Choose a rejection threshold that provides an acceptance rate of about 1%. Which estimate is provided with more confidence (i.e. which posterior is more tightly distributed? How can you relate that back to the curvature of the function at the minimum?.
+> ***Answer 4***: Posterior distribution for x is tighter than the posterior distribution for y, which suggests a larger curvature of the function at the X minimum.
+
+```{r}
+draw_x <- function() {
+    return(runif(1, min = -1, max = 1))
+}
+draw_y <- function() {
+    return(runif(1, min = -1, max = 1))
+}
+
+sample_by_rejection <- function(n_iterations, acceptance_threshold) {
+    accepted <- vector(length = n_iterations)
+    sampled_x <- vector(length = n_iterations, mode = "numeric")
+    sampled_y <- vector(length = n_iterations, mode = "numeric")
+    for (i in 1:n_iterations) {
+        x <- draw_x()
+        y <- draw_y()
+        if (x^4 + y^2 < acceptance_threshold) {
+            accepted[i] <- 1
+        } else {
+            accepted[i] <- 0
+        }
+        # accepted_or_rejected[i] =
+        # accept_or_reject_function(true_data,
+        # simulated_data, acceptance_threshold)
+        sampled_x[i] = x
+        sampled_y[i] = y
+    }
+    return(data.frame(cbind(accepted = accepted, sampled_xs = sampled_x,
+        sampled_ys = sampled_y)))
+}
+
+# set seed
+set.seed(132)
+
+# simulate 20000 times with a threshold of 0.15
+results = sample_by_rejection(20000,
+    0.005)
+
+# report the number of accepted values among the 200000
+# samples
+sum(results)
+
+cat("Number accepted:", sum(results$accepted), "\n")
+```
+```{r}
+# Keep only accepted draws
+posterior <- results[results$accepted == 1, ]
+
+# Plot
+par(mfrow = c(1, 2), mar = c(5, 4, 4, 2) + 0.1)
+
+hist(posterior$sampled_xs,
+     breaks  = 40,
+     col     = rgb(0.20, 0.40, 0.68, 0.8),
+     border  = rgb(0.20, 0.40, 0.68, 1.0),
+     main    = expression("Posterior of " * italic(x)),
+     xlab    = "x",
+     ylab    = "Count",
+     las     = 1)
+
+hist(posterior$sampled_ys,
+     breaks  = 40,
+     col     = rgb(0.75, 0.33, 0.23, 0.8),
+     border  = rgb(0.75, 0.33, 0.23, 1.0),
+     main    = expression("Posterior of " * italic(y)),
+     xlab    = "y",
+     ylab    = "Count",
+     las     = 1)
+
+par(mfrow = c(1, 1))
+```
+
+#### Exercise 5
+Repeat example 11 by applying the rejection algorithm to estimate the values of  
+β and γ by fitting the Lotka-Volterra model to the data provided below. Use initial conditions  
+$x=0.008792889$,$y=1.595545$ as in the example. Use uniform prior distributions of [2,30] for  
+β and [1,4] for γ, and choose a rejection threshold that provides an acceptance rate of about 1%. Do you find that one parameter is more confidently estimated (tighter distribution) than the other? Use the data shown below. To avoid errors in the simulation, you can add the options $method = "radau", atol = 1e^{-6}, rtol = 1e^{-6}$ to the call to $ode$. 
+> ***Answer 5***: Because the posterior distribution for B is tighter than that of Y, the estimation of B is likely greater with the more conservative rejection model.
+
+```{r}
+t_obs_ex5 <- c(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8,
+    2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 3.8, 4, 4.2, 4.4,
+    4.6, 4.8, 5, 5.2, 5.4, 5.6, 5.8, 6, 6.2, 6.4, 6.6, 6.8, 7,
+    7.2, 7.4, 7.6, 7.8, 8)
+
+x1_obs_ex5 <- c(0.0091, 0.043, 0.2, 0.82, 3.4, 2.9, 0.12, 0.0077,
+    0.00093, 0.00026, 0.00014, 0.00013, 0.00015, 0.00025, 0.00054,
+    0.0015, 0.0051, 0.02, 0.087, 0.36, 1.7, 5.6, 0.66, 0.029,
+    0.0024, 0.00048, 0.00019, 0.00012, 0.00013, 0.00019, 0.00035,
+    0.001, 0.003, 0.01, 0.041, 0.19, 0.88, 3.8, 3.2, 0.13, 0.0078)
+
+x2_obs_ex5 <- c(0.82, 1.1, 0.98, 0.65, 1.1, 5.1, 7.1, 7.9, 4.3,
+    3.5, 3.8, 3.9, 2.5, 2.1, 1.6, 1.4, 1.2, 1, 0.92, 0.57, 0.73,
+    3.6, 6.7, 9.1, 5.5, 4.7, 4.5, 3, 2.9, 2.7, 1.7, 2, 1.7, 1.3,
+    0.98, 0.98, 0.84, 1.6, 6.5, 8.2, 7.7)
+```
+
+```{r}
+library(deSolve)
+
+determine_sse_ex5 <- function(p) {
+
+    # first four input parameters are the kinetic
+    # parameters of the model
+    newPars <- c(p[1], p[2])
+    # last tw parameters are the initial populations for x
+    # and y, respectively
+    newState <- c(x1 = 0.008792889, x2 = 1.595545)
+
+    # time-grid is the same as before, no need to redefine
+    Time_ex5 <- seq(0, 8, by = 0.2)
+
+    Time_ex5
+
+    # kinetics
+    newLotVmod <- function(Time, State, newPars) {
+        with(as.list(c(State, newPars)), {
+            dx1 = x1 * (30 - p[1] * x2)
+            dx2 = -x2 * (p[2] - 6 * x1)
+            return(list(c(dx1, dx2)))
+        })
+    }
+
+    new_out1 <- as.data.frame(ode(func = newLotVmod, y = newState,
+        parms = newPars, times = Time_ex5, method = "radau",
+        atol = 1e-06, rtol = 1e-06))
+
+    sse <- sum((x1_obs_ex5 - new_out1$x1)^2) + sum((x2_obs_ex5 -
+        new_out1$x2)^2)
+    return(sse)
+
+}
+
+# recall the dataset
+
+
+# define functions to draw values from the prior
+# distributions
+draw_beta <- function() {
+    return(runif(1, min = 2, max = 30))
+}
+draw_gamma <- function() {
+    return(runif(1, min = 1, max = 4))
+}
+
+# sampling algorithm: returns the sampled values and
+# whether this pair is accepted
+sample_by_rejection <- function(n_iterations, acceptance_threshold) {
+    accepted <- vector(length = n_iterations)
+    sampled_beta <- vector(length = n_iterations, mode = "numeric")
+    sampled_gamma <- vector(length = n_iterations, mode = "numeric")
+    for (i in 1:n_iterations) {
+        beta <- draw_beta()
+        gamma <- draw_gamma()
+        if (determine_sse_ex5(c(beta, gamma)) < acceptance_threshold) {
+            accepted[i] <- 1
+        } else {
+            accepted[i] <- 0
+        }
+        # accepted_or_rejected[i] =
+        # accept_or_reject_function(true_data,
+        # simulated_data, acceptance_threshold)
+        sampled_beta[i] = beta
+        sampled_gamma[i] = gamma
+    }
+    return(data.frame(cbind(accepted = accepted, sampled_betas = sampled_beta,
+        sampled_gammas = sampled_gamma)))
+}
+```
+
+```{r}
+set.seed(42)
+
+# sample SSE values without any threshold
+sse_values <- numeric(500)
+for (i in 1:500) {
+  beta  <- draw_beta()
+  gamma <- draw_gamma()
+  sse_values[i] <- determine_sse_ex5(c(beta, gamma))
+}
+
+# inspect the distribution of SSE values
+summary(sse_values)
+hist(sse_values, breaks = 30, main = "Distribution of SSE values", xlab = "SSE")
+
+cat("Minimum SSE:", min(sse_values), "\n")
+cat("10th percentile:", quantile(sse_values, 0.10), "\n")
+
+new_threshold <- quantile(sse_values, 0.10)
+
+results <- sample_by_rejection(n_iterations = 5000, acceptance_threshold = new_threshold)
+results <- as.data.frame(apply(results, 2, as.numeric))
+
+cat("Accepted:", sum(results$accepted), "out of", nrow(results), "\n")
+
+posterior <- results[results$accepted == 1, ]
+
+hist(posterior$sampled_gammas,
+     col    = rgb(0.20, 0.40, 0.68, 0.8),
+     border = rgb(0.20, 0.40, 0.68, 1.0),
+     main   = expression("Posterior of " * gamma),
+     xlab   = expression(gamma),
+     ylab   = "Count",
+     las    = 1)
+```
+

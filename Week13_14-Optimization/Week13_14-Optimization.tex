@@ -1,0 +1,823 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Week13-14\_Optimization},
+  pdfauthor={Carter Kathleen Stancil},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Week13-14\_Optimization}
+\author{Carter Kathleen Stancil}
+\date{2026-04-29}
+
+\begin{document}
+\maketitle
+
+\paragraph{Exercise 1}\label{exercise-1}
+
+Consider the following dataset, which corresponds to measurements of
+drug concentration in the blood over time. try fitting the data to an
+exponential \(C(t) = ae^{-rt}\). You'll find that the best-fit model is
+not satisfactory. Next, try fitting a biexponential
+\(C(t) = a_1e^{-r_1t} + a_2e^{-r_2t}\). You'll find a more suitable
+agreement. For fitting, you can either use the nls command or the
+gradient descent function above (along with a sum of squared errors
+function). For nls, you may find the algorithm is very sensitive to your
+choice of initial guess (and will fail if the initial guess is not
+fairly accurate). For gradient descent, you'll need to use a small
+stepsize, e.g.~\(10^{-5}\), and a large number of iterations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{40}\NormalTok{, }\DecValTok{50}\NormalTok{, }\DecValTok{60}\NormalTok{, }\DecValTok{70}\NormalTok{, }\DecValTok{80}\NormalTok{, }\DecValTok{90}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{C }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{5.585}\NormalTok{, }\FloatTok{4.392}\NormalTok{, }\FloatTok{3.2564}\NormalTok{, }\FloatTok{2.9971}\NormalTok{, }\FloatTok{2.6493}\NormalTok{, }\FloatTok{2.3863}\NormalTok{, }\FloatTok{2.0838}\NormalTok{,}
+    \FloatTok{2.0862}\NormalTok{, }\FloatTok{1.7009}\NormalTok{, }\FloatTok{1.7339}\NormalTok{, }\FloatTok{1.4162}\NormalTok{)}
+\NormalTok{BE\_data }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(t, C)}
+\FunctionTok{plot}\NormalTok{(BE\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-1-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(t, C)}
+
+\CommentTok{\# Nonlinear least squares fit}
+\NormalTok{fit }\OtherTok{\textless{}{-}} \FunctionTok{nls}\NormalTok{(}
+\NormalTok{  C }\SpecialCharTok{\textasciitilde{}}\NormalTok{ a }\SpecialCharTok{*} \FunctionTok{exp}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{b }\SpecialCharTok{*}\NormalTok{ t) }\SpecialCharTok{+}\NormalTok{ c,}
+  \AttributeTok{data =}\NormalTok{ df,}
+  \AttributeTok{start =} \FunctionTok{list}\NormalTok{(}\AttributeTok{a =} \DecValTok{4}\NormalTok{, }\AttributeTok{b =} \FloatTok{0.02}\NormalTok{, }\AttributeTok{c =} \DecValTok{1}\NormalTok{)}
+\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Formula: C ~ a * exp(-b * t) + c
+## 
+## Parameters:
+##   Estimate Std. Error t value Pr(>|t|)    
+## a 4.012977   0.173559  23.122 1.30e-08 ***
+## b 0.033244   0.003966   8.382 3.12e-05 ***
+## c 1.496787   0.144599  10.351 6.56e-06 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1667 on 8 degrees of freedom
+## 
+## Number of iterations to convergence: 7 
+## Achieved convergence tolerance: 2.329e-06
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(t, C, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)}
+\FunctionTok{curve}\NormalTok{(}\FunctionTok{predict}\NormalTok{(fit, }\AttributeTok{newdata =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{t =}\NormalTok{ x)),}
+      \AttributeTok{add =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-1-2.pdf}}
+\#\#\#\# Exercise 2 Apply the genetic algorithm with ga to confirm the
+minimum of the egg-carton function in Example 9.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Example 9}
+\CommentTok{\#install.packages("GenSA")}
+\FunctionTok{library}\NormalTok{(GenSA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'GenSA' was built under R version 4.5.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{f.egg }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+    \SpecialCharTok{{-}}\NormalTok{(x[ }\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \DecValTok{47}\NormalTok{) }\SpecialCharTok{*} \FunctionTok{sin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(x[ }\DecValTok{2}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ (x[ }\DecValTok{1}\NormalTok{]}\SpecialCharTok{/}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \DecValTok{47}\NormalTok{))) }\SpecialCharTok{{-}}
+\NormalTok{        x[ }\DecValTok{1}\NormalTok{] }\SpecialCharTok{*} \FunctionTok{sin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(x[ }\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ (x[ }\DecValTok{2}\NormalTok{] }\SpecialCharTok{+} \DecValTok{47}\NormalTok{)))) }\SpecialCharTok{+} \FloatTok{0.001} \SpecialCharTok{*}
+\NormalTok{        x[ }\DecValTok{1}\NormalTok{]}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \FloatTok{0.001} \SpecialCharTok{*}\NormalTok{ x[ }\DecValTok{2}\NormalTok{]}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# define a set of initial guess values}
+
+\CommentTok{\# initial guesses}
+\NormalTok{x1 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{x2 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+
+\CommentTok{\# specify bounds}
+\NormalTok{lower }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{200}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\NormalTok{upper }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\DecValTok{200}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+
+
+\NormalTok{egg.out1 }\OtherTok{\textless{}{-}} \FunctionTok{GenSA}\NormalTok{(}\AttributeTok{par =}\NormalTok{ x1, }\AttributeTok{lower =}\NormalTok{ lower, }\AttributeTok{upper =}\NormalTok{ upper, }\AttributeTok{fn =}\NormalTok{ f.egg)}
+\NormalTok{egg.out2 }\OtherTok{\textless{}{-}} \FunctionTok{GenSA}\NormalTok{(}\AttributeTok{par =}\NormalTok{ x2, }\AttributeTok{lower =}\NormalTok{ lower, }\AttributeTok{upper =}\NormalTok{ upper, }\AttributeTok{fn =}\NormalTok{ f.egg)}
+\NormalTok{egg.out1[}\FunctionTok{c}\NormalTok{(}\StringTok{"value"}\NormalTok{, }\StringTok{"par"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $value
+## [1] -266.8175
+## 
+## $par
+## [1] -161.38281   95.54245
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{egg.out2[}\FunctionTok{c}\NormalTok{(}\StringTok{"value"}\NormalTok{, }\StringTok{"par"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $value
+## [1] -266.8175
+## 
+## $par
+## [1] -161.38281   95.54245
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Example 10}
+\CommentTok{\#install.packages("GA")}
+
+\NormalTok{Example\_7\_fun }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x, y) \{}
+    \FunctionTok{return}\NormalTok{((}\DecValTok{1}\SpecialCharTok{/}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ x}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \DecValTok{1}\SpecialCharTok{/}\DecValTok{4} \SpecialCharTok{*}\NormalTok{ y}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \DecValTok{3}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{cos}\NormalTok{(}\DecValTok{2} \SpecialCharTok{*}\NormalTok{ x }\SpecialCharTok{+} \DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{exp}\NormalTok{(y)))}
+\NormalTok{\}}
+
+\FunctionTok{library}\NormalTok{(GA)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'GA' was built under R version 4.5.3
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: foreach
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'foreach' was built under R version 4.5.2
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: iterators
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'iterators' was built under R version 4.5.2
+\end{verbatim}
+
+\begin{verbatim}
+## Package 'GA' version 3.2.5
+## Type 'citation("GA")' for citing this R package in publications.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'GA'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:utils':
+## 
+##     de
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ga }\OtherTok{\textless{}{-}} \FunctionTok{ga}\NormalTok{(}\AttributeTok{type =} \StringTok{"real{-}valued"}\NormalTok{, }\AttributeTok{fitness =} \ControlFlowTok{function}\NormalTok{(x) }\SpecialCharTok{{-}}\FunctionTok{Example\_7\_fun}\NormalTok{(x[}\DecValTok{1}\NormalTok{],}
+\NormalTok{    x[}\DecValTok{2}\NormalTok{]), }\AttributeTok{lower =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{), }\AttributeTok{upper =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{), }\AttributeTok{maxiter =} \DecValTok{30}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(ga)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-6-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(ga)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Genetic Algorithm ------------------- 
+## 
+## GA settings: 
+## Type                  =  real-valued 
+## Population size       =  50 
+## Number of generations =  30 
+## Elitism               =  2 
+## Crossover probability =  0.8 
+## Mutation probability  =  0.1 
+## Search domain = 
+##       x1 x2
+## lower -2 -2
+## upper  2  2
+## 
+## GA results: 
+## Iterations             = 30 
+## Fitness function value = -2.426947 
+## Solution = 
+##              x1       x2
+## [1,] -0.3776603 1.159537
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Exercise 2 Work}
+\NormalTok{f.egg }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y) \{}
+    \SpecialCharTok{{-}}\NormalTok{(y }\SpecialCharTok{+} \DecValTok{47}\NormalTok{) }\SpecialCharTok{*} \FunctionTok{sin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(y }\SpecialCharTok{+}\NormalTok{ (x}\SpecialCharTok{/}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \DecValTok{47}\NormalTok{))) }\SpecialCharTok{{-}}\NormalTok{ x }\SpecialCharTok{*} \FunctionTok{sin}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{abs}\NormalTok{(x }\SpecialCharTok{{-}}
+\NormalTok{        (y }\SpecialCharTok{+} \DecValTok{47}\NormalTok{)))) }\SpecialCharTok{+} \FloatTok{0.001} \SpecialCharTok{*}\NormalTok{ x}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \FloatTok{0.001} \SpecialCharTok{*}\NormalTok{ y}\SpecialCharTok{\^{}}\DecValTok{2}
+\NormalTok{\}}
+
+\FunctionTok{library}\NormalTok{(GA)}
+\NormalTok{ga\_ex2 }\OtherTok{\textless{}{-}} \FunctionTok{ga}\NormalTok{(}\AttributeTok{type =} \StringTok{"real{-}valued"}\NormalTok{, }\AttributeTok{fitness =} \ControlFlowTok{function}\NormalTok{(x) }\SpecialCharTok{{-}}\FunctionTok{f.egg}\NormalTok{(x[}\DecValTok{1}\NormalTok{],}
+\NormalTok{    x[}\DecValTok{2}\NormalTok{]), }\AttributeTok{lower =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{200}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{200}\NormalTok{), }\AttributeTok{upper =} \FunctionTok{c}\NormalTok{(}\DecValTok{200}\NormalTok{, }\DecValTok{200}\NormalTok{), }\AttributeTok{maxiter =} \DecValTok{30}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(ga\_ex2)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-8-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(ga\_ex2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Genetic Algorithm ------------------- 
+## 
+## GA settings: 
+## Type                  =  real-valued 
+## Population size       =  50 
+## Number of generations =  30 
+## Elitism               =  2 
+## Crossover probability =  0.8 
+## Mutation probability  =  0.1 
+## Search domain = 
+##         x1   x2
+## lower -200 -200
+## upper  200  200
+## 
+## GA results: 
+## Iterations             = 30 
+## Fitness function value = 262.9518 
+## Solution = 
+##             x1       x2
+## [1,] -72.58371 186.1523
+\end{verbatim}
+
+\paragraph{Exercise 3}\label{exercise-3}
+
+Following the process in Example 11, calibrate all four model
+parameters\\
+α, β, γ, and δ to the following dataset, with initial states
+\(x_1(0)=0.01\) and \(x_2(0)=1.0\). Use either simulated annealing or a
+genetic algorithm. You can generate a simulation with the predictions at
+the time-points corresponding to the observations by setting
+\(Time <- seq(0, 8, by =0.2)\) in the simulation script above. If you
+have trouble finding a suitable initial guess, try\\
+α=10, β=1, γ=1, δ=1.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t\_obs\_ex }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.4}\NormalTok{, }\FloatTok{0.6}\NormalTok{, }\FloatTok{0.8}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.6}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\DecValTok{2}\NormalTok{,}
+    \FloatTok{2.2}\NormalTok{, }\FloatTok{2.4}\NormalTok{, }\FloatTok{2.6}\NormalTok{, }\FloatTok{2.8}\NormalTok{, }\DecValTok{3}\NormalTok{, }\FloatTok{3.2}\NormalTok{, }\FloatTok{3.4}\NormalTok{, }\FloatTok{3.6}\NormalTok{, }\FloatTok{3.8}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{4.2}\NormalTok{, }\FloatTok{4.4}\NormalTok{, }\FloatTok{4.6}\NormalTok{,}
+    \FloatTok{4.8}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{5.2}\NormalTok{, }\FloatTok{5.4}\NormalTok{, }\FloatTok{5.6}\NormalTok{, }\FloatTok{5.8}\NormalTok{, }\DecValTok{6}\NormalTok{, }\FloatTok{6.2}\NormalTok{, }\FloatTok{6.4}\NormalTok{, }\FloatTok{6.6}\NormalTok{, }\FloatTok{6.8}\NormalTok{, }\DecValTok{7}\NormalTok{, }\FloatTok{7.2}\NormalTok{,}
+    \FloatTok{7.4}\NormalTok{, }\FloatTok{7.6}\NormalTok{, }\FloatTok{7.8}\NormalTok{, }\DecValTok{8}\NormalTok{)}
+
+\NormalTok{x1\_obs\_ex }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.043}\NormalTok{, }\FloatTok{0.18}\NormalTok{, }\FloatTok{0.86}\NormalTok{, }\FloatTok{3.6}\NormalTok{, }\FloatTok{3.24}\NormalTok{, }\FloatTok{0.13}\NormalTok{, }\FloatTok{0.0075}\NormalTok{,}
+    \FloatTok{0.00095}\NormalTok{, }\FloatTok{0.0079}\NormalTok{, }\FloatTok{0.00012}\NormalTok{, }\FloatTok{0.00012}\NormalTok{, }\FloatTok{0.00015}\NormalTok{, }\FloatTok{0.00026}\NormalTok{, }\FloatTok{0.00057}\NormalTok{,}
+    \FloatTok{0.0016}\NormalTok{, }\FloatTok{0.0052}\NormalTok{, }\FloatTok{0.021}\NormalTok{, }\FloatTok{0.084}\NormalTok{, }\FloatTok{0.39}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\FloatTok{5.3}\NormalTok{, }\FloatTok{0.72}\NormalTok{, }\FloatTok{0.028}\NormalTok{,}
+    \FloatTok{0.0024}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.00019}\NormalTok{, }\FloatTok{0.00013}\NormalTok{, }\FloatTok{0.00013}\NormalTok{, }\FloatTok{0.00019}\NormalTok{, }\FloatTok{0.00037}\NormalTok{,}
+    \FloatTok{0.00095}\NormalTok{, }\FloatTok{0.0062}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.04}\NormalTok{, }\FloatTok{0.18}\NormalTok{, }\FloatTok{0.84}\NormalTok{, }\FloatTok{3.6}\NormalTok{, }\FloatTok{3.3}\NormalTok{, }\FloatTok{0.13}\NormalTok{,}
+    \FloatTok{0.0091}\NormalTok{)}
+
+\NormalTok{x2\_obs\_ex }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{0.67}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\FloatTok{5.1}\NormalTok{, }\FloatTok{0.78}\NormalTok{, }\FloatTok{0.13}\NormalTok{, }\FloatTok{5.7}\NormalTok{, }\FloatTok{8.2}\NormalTok{, }\FloatTok{7.5}\NormalTok{, }\FloatTok{5.6}\NormalTok{,}
+    \FloatTok{4.4}\NormalTok{, }\DecValTok{3}\NormalTok{, }\FloatTok{5.3}\NormalTok{, }\FloatTok{2.2}\NormalTok{, }\FloatTok{1.9}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\FloatTok{1.1}\NormalTok{, }\FloatTok{2.3}\NormalTok{, }\FloatTok{1.6}\NormalTok{, }\FloatTok{0.25}\NormalTok{,}
+    \FloatTok{3.8}\NormalTok{, }\FloatTok{8.4}\NormalTok{, }\FloatTok{8.3}\NormalTok{, }\FloatTok{6.4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\FloatTok{1.9}\NormalTok{, }\FloatTok{2.8}\NormalTok{, }\FloatTok{2.9}\NormalTok{, }\FloatTok{1.6}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{1.7}\NormalTok{, }\FloatTok{4.2}\NormalTok{,}
+    \FloatTok{1.8}\NormalTok{, }\FloatTok{2.7}\NormalTok{, }\FloatTok{1.3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{6.8}\NormalTok{, }\FloatTok{8.7}\NormalTok{, }\FloatTok{7.4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{determine\_sse\_ex3 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(p) \{}
+
+    \CommentTok{\# input parameters are the kinetic parameters of the}
+    \CommentTok{\# model}
+\NormalTok{    newPars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(p[}\DecValTok{1}\NormalTok{], p[}\DecValTok{2}\NormalTok{], p[}\DecValTok{3}\NormalTok{], p[}\DecValTok{4}\NormalTok{])}
+    \CommentTok{\# initial populations for x1 and x2, respectively}
+\NormalTok{    newState }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{x1 =} \FloatTok{0.01}\NormalTok{, }\AttributeTok{x2 =} \DecValTok{1}\NormalTok{)}
+
+    \CommentTok{\# time{-}grid as specified}
+\NormalTok{    Time }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{8}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.2}\NormalTok{)}
+
+    \CommentTok{\# model}
+\NormalTok{    newLotVmod }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(Time, State, newPars) \{}
+        \FunctionTok{with}\NormalTok{(}\FunctionTok{as.list}\NormalTok{(}\FunctionTok{c}\NormalTok{(State, newPars)), \{}
+\NormalTok{            dx1 }\OtherTok{=}\NormalTok{ x1 }\SpecialCharTok{*}\NormalTok{ (p[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ p[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ x2)}
+\NormalTok{            dx2 }\OtherTok{=} \SpecialCharTok{{-}}\NormalTok{x2 }\SpecialCharTok{*}\NormalTok{ (p[}\DecValTok{3}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ p[}\DecValTok{4}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ x1)}
+            \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(dx1, dx2)))}
+\NormalTok{        \})}
+\NormalTok{    \}}
+    \FunctionTok{library}\NormalTok{(deSolve)}
+    \CommentTok{\# simulation}
+\NormalTok{    new\_out1 }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{ode}\NormalTok{(}\AttributeTok{func =}\NormalTok{ newLotVmod, }\AttributeTok{y =}\NormalTok{ newState,}
+        \AttributeTok{parms =}\NormalTok{ newPars, }\AttributeTok{times =}\NormalTok{ Time))}
+
+\NormalTok{    x1\_obs\_ex }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.043}\NormalTok{, }\FloatTok{0.18}\NormalTok{, }\FloatTok{0.86}\NormalTok{, }\FloatTok{3.6}\NormalTok{, }\FloatTok{3.24}\NormalTok{, }\FloatTok{0.13}\NormalTok{,}
+        \FloatTok{0.0075}\NormalTok{, }\FloatTok{0.00095}\NormalTok{, }\FloatTok{0.0079}\NormalTok{, }\FloatTok{0.00012}\NormalTok{, }\FloatTok{0.00012}\NormalTok{, }\FloatTok{0.00015}\NormalTok{, }\FloatTok{0.00026}\NormalTok{,}
+        \FloatTok{0.00057}\NormalTok{, }\FloatTok{0.0016}\NormalTok{, }\FloatTok{0.0052}\NormalTok{, }\FloatTok{0.021}\NormalTok{, }\FloatTok{0.084}\NormalTok{, }\FloatTok{0.39}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\FloatTok{5.3}\NormalTok{,}
+        \FloatTok{0.72}\NormalTok{, }\FloatTok{0.028}\NormalTok{, }\FloatTok{0.0024}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.00019}\NormalTok{, }\FloatTok{0.00013}\NormalTok{, }\FloatTok{0.00013}\NormalTok{,}
+        \FloatTok{0.00019}\NormalTok{, }\FloatTok{0.00037}\NormalTok{, }\FloatTok{0.00095}\NormalTok{, }\FloatTok{0.0062}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.04}\NormalTok{, }\FloatTok{0.18}\NormalTok{,}
+        \FloatTok{0.84}\NormalTok{, }\FloatTok{3.6}\NormalTok{, }\FloatTok{3.3}\NormalTok{, }\FloatTok{0.13}\NormalTok{, }\FloatTok{0.0091}\NormalTok{)}
+
+\NormalTok{    x2\_obs\_ex }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{0.67}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\FloatTok{5.1}\NormalTok{, }\FloatTok{0.78}\NormalTok{, }\FloatTok{0.13}\NormalTok{, }\FloatTok{5.7}\NormalTok{, }\FloatTok{8.2}\NormalTok{, }\FloatTok{7.5}\NormalTok{,}
+        \FloatTok{5.6}\NormalTok{, }\FloatTok{4.4}\NormalTok{, }\DecValTok{3}\NormalTok{, }\FloatTok{5.3}\NormalTok{, }\FloatTok{2.2}\NormalTok{, }\FloatTok{1.9}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\FloatTok{1.1}\NormalTok{, }\FloatTok{2.3}\NormalTok{,}
+        \FloatTok{1.6}\NormalTok{, }\FloatTok{0.25}\NormalTok{, }\FloatTok{3.8}\NormalTok{, }\FloatTok{8.4}\NormalTok{, }\FloatTok{8.3}\NormalTok{, }\FloatTok{6.4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\FloatTok{1.9}\NormalTok{, }\FloatTok{2.8}\NormalTok{, }\FloatTok{2.9}\NormalTok{,}
+        \FloatTok{1.6}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{1.7}\NormalTok{, }\FloatTok{4.2}\NormalTok{, }\FloatTok{1.8}\NormalTok{, }\FloatTok{2.7}\NormalTok{, }\FloatTok{1.3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{6.8}\NormalTok{, }\FloatTok{8.7}\NormalTok{, }\FloatTok{7.4}\NormalTok{)}
+
+    \CommentTok{\# determine SSE}
+\NormalTok{    sse }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((x1\_obs\_ex }\SpecialCharTok{{-}}\NormalTok{ new\_out1}\SpecialCharTok{$}\NormalTok{x1)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{sum}\NormalTok{((x2\_obs\_ex }\SpecialCharTok{{-}}
+\NormalTok{        new\_out1}\SpecialCharTok{$}\NormalTok{x2)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+    \FunctionTok{return}\NormalTok{(sse)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(GA)}
+\NormalTok{ga\_ex3 }\OtherTok{\textless{}{-}} \FunctionTok{ga}\NormalTok{(}\AttributeTok{type =} \StringTok{"real{-}valued"}\NormalTok{, }\AttributeTok{fitness =} \ControlFlowTok{function}\NormalTok{(x) }\SpecialCharTok{{-}}\FunctionTok{determine\_sse\_ex3}\NormalTok{(}\FunctionTok{c}\NormalTok{(x[}\DecValTok{1}\NormalTok{],}
+\NormalTok{    x[}\DecValTok{2}\NormalTok{], x[}\DecValTok{3}\NormalTok{], x[}\DecValTok{4}\NormalTok{])), }\AttributeTok{lower =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\AttributeTok{upper =} \FunctionTok{c}\NormalTok{(}\DecValTok{20}\NormalTok{,}
+    \DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{), }\AttributeTok{maxiter =} \DecValTok{25}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'deSolve' was built under R version 4.5.2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(ga\_ex3)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-11-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(ga\_ex3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Genetic Algorithm ------------------- 
+## 
+## GA settings: 
+## Type                  =  real-valued 
+## Population size       =  50 
+## Number of generations =  25 
+## Elitism               =  2 
+## Crossover probability =  0.8 
+## Mutation probability  =  0.1 
+## Search domain = 
+##         x1   x2  x3  x4
+## lower  0.1  0.1 0.1 0.1
+## upper 20.0 10.0 5.0 5.0
+## 
+## GA results: 
+## Iterations             = 25 
+## Fitness function value = -115.5131 
+## Solution = 
+##            x1       x2        x3       x4
+## [1,] 12.12281 4.495564 0.8098859 2.454139
+\end{verbatim}
+
+\paragraph{Exercise 4}\label{exercise-4}
+
+Consider the task of finding the minimum of the function
+\(f(x,y)=x^4 +y^2\),plotted below. Clearly, the minimum is zero, and
+numerical optimization routines will have no trouble estimating that
+solution. However, because the curvature at the minimum is much
+different along the \(-x\) and \(-y\) directions, most numerical
+algorithms will do a better job estimating one parameter compared to the
+other. This can be well-illustrated by applying the rejection method to
+this problem and noting the relative spread in the posterior
+distributions. Implement the rejection algorithm provided above with
+uniform prior distributions on {[}-1, 1{]} for both the \(x\) and \(y\)
+values. Choose a rejection threshold that provides an acceptance rate of
+about 1\%. Which estimate is provided with more confidence (i.e.~which
+posterior is more tightly distributed? How can you relate that back to
+the curvature of the function at the minimum?. \textgreater{}
+\textbf{\emph{Answer 4}}: Posterior distribution for x is tighter than
+the posterior distribution for y, which suggests a larger curvature of
+the function at the X minimum.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{draw\_x }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{max =} \DecValTok{1}\NormalTok{))}
+\NormalTok{\}}
+\NormalTok{draw\_y }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{max =} \DecValTok{1}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{sample\_by\_rejection }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(n\_iterations, acceptance\_threshold) \{}
+\NormalTok{    accepted }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length =}\NormalTok{ n\_iterations)}
+\NormalTok{    sampled\_x }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length =}\NormalTok{ n\_iterations, }\AttributeTok{mode =} \StringTok{"numeric"}\NormalTok{)}
+\NormalTok{    sampled\_y }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length =}\NormalTok{ n\_iterations, }\AttributeTok{mode =} \StringTok{"numeric"}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n\_iterations) \{}
+\NormalTok{        x }\OtherTok{\textless{}{-}} \FunctionTok{draw\_x}\NormalTok{()}
+\NormalTok{        y }\OtherTok{\textless{}{-}} \FunctionTok{draw\_y}\NormalTok{()}
+        \ControlFlowTok{if}\NormalTok{ (x}\SpecialCharTok{\^{}}\DecValTok{4} \SpecialCharTok{+}\NormalTok{ y}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{\textless{}}\NormalTok{ acceptance\_threshold) \{}
+\NormalTok{            accepted[i] }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{        \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{            accepted[i] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{        \}}
+        \CommentTok{\# accepted\_or\_rejected[i] =}
+        \CommentTok{\# accept\_or\_reject\_function(true\_data,}
+        \CommentTok{\# simulated\_data, acceptance\_threshold)}
+\NormalTok{        sampled\_x[i] }\OtherTok{=}\NormalTok{ x}
+\NormalTok{        sampled\_y[i] }\OtherTok{=}\NormalTok{ y}
+\NormalTok{    \}}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(}\AttributeTok{accepted =}\NormalTok{ accepted, }\AttributeTok{sampled\_xs =}\NormalTok{ sampled\_x,}
+        \AttributeTok{sampled\_ys =}\NormalTok{ sampled\_y)))}
+\NormalTok{\}}
+
+\CommentTok{\# set seed}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{132}\NormalTok{)}
+
+\CommentTok{\# simulate 20000 times with a threshold of 0.15}
+\NormalTok{results }\OtherTok{=} \FunctionTok{sample\_by\_rejection}\NormalTok{(}\DecValTok{20000}\NormalTok{,}
+    \FloatTok{0.005}\NormalTok{)}
+
+\CommentTok{\# report the number of accepted values among the 200000}
+\CommentTok{\# samples}
+\FunctionTok{sum}\NormalTok{(results)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 268.7498
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Number accepted:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(results}\SpecialCharTok{$}\NormalTok{accepted), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Number accepted: 324
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Keep only accepted draws}
+\NormalTok{posterior }\OtherTok{\textless{}{-}}\NormalTok{ results[results}\SpecialCharTok{$}\NormalTok{accepted }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, ]}
+
+\CommentTok{\# Plot}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FloatTok{0.1}\NormalTok{)}
+
+\FunctionTok{hist}\NormalTok{(posterior}\SpecialCharTok{$}\NormalTok{sampled\_xs,}
+     \AttributeTok{breaks  =} \DecValTok{40}\NormalTok{,}
+     \AttributeTok{col     =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.20}\NormalTok{, }\FloatTok{0.40}\NormalTok{, }\FloatTok{0.68}\NormalTok{, }\FloatTok{0.8}\NormalTok{),}
+     \AttributeTok{border  =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.20}\NormalTok{, }\FloatTok{0.40}\NormalTok{, }\FloatTok{0.68}\NormalTok{, }\FloatTok{1.0}\NormalTok{),}
+     \AttributeTok{main    =} \FunctionTok{expression}\NormalTok{(}\StringTok{"Posterior of "} \SpecialCharTok{*} \FunctionTok{italic}\NormalTok{(x)),}
+     \AttributeTok{xlab    =} \StringTok{"x"}\NormalTok{,}
+     \AttributeTok{ylab    =} \StringTok{"Count"}\NormalTok{,}
+     \AttributeTok{las     =} \DecValTok{1}\NormalTok{)}
+
+\FunctionTok{hist}\NormalTok{(posterior}\SpecialCharTok{$}\NormalTok{sampled\_ys,}
+     \AttributeTok{breaks  =} \DecValTok{40}\NormalTok{,}
+     \AttributeTok{col     =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.75}\NormalTok{, }\FloatTok{0.33}\NormalTok{, }\FloatTok{0.23}\NormalTok{, }\FloatTok{0.8}\NormalTok{),}
+     \AttributeTok{border  =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.75}\NormalTok{, }\FloatTok{0.33}\NormalTok{, }\FloatTok{0.23}\NormalTok{, }\FloatTok{1.0}\NormalTok{),}
+     \AttributeTok{main    =} \FunctionTok{expression}\NormalTok{(}\StringTok{"Posterior of "} \SpecialCharTok{*} \FunctionTok{italic}\NormalTok{(y)),}
+     \AttributeTok{xlab    =} \StringTok{"y"}\NormalTok{,}
+     \AttributeTok{ylab    =} \StringTok{"Count"}\NormalTok{,}
+     \AttributeTok{las     =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-13-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\paragraph{Exercise 5}\label{exercise-5}
+
+Repeat example 11 by applying the rejection algorithm to estimate the
+values of\\
+β and γ by fitting the Lotka-Volterra model to the data provided below.
+Use initial conditions\\
+\(x=0.008792889\),\(y=1.595545\) as in the example. Use uniform prior
+distributions of {[}2,30{]} for\\
+β and {[}1,4{]} for γ, and choose a rejection threshold that provides an
+acceptance rate of about 1\%. Do you find that one parameter is more
+confidently estimated (tighter distribution) than the other? Use the
+data shown below. To avoid errors in the simulation, you can add the
+options \(method = "radau", atol = 1e^{-6}, rtol = 1e^{-6}\) to the call
+to \(ode\). \textgreater{} \textbf{\emph{Answer 5}}: Because the
+posterior distribution for B is tighter than that of Y, the estimation
+of B is likely greater with the more conservative rejection model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t\_obs\_ex5 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.4}\NormalTok{, }\FloatTok{0.6}\NormalTok{, }\FloatTok{0.8}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.6}\NormalTok{, }\FloatTok{1.8}\NormalTok{,}
+    \DecValTok{2}\NormalTok{, }\FloatTok{2.2}\NormalTok{, }\FloatTok{2.4}\NormalTok{, }\FloatTok{2.6}\NormalTok{, }\FloatTok{2.8}\NormalTok{, }\DecValTok{3}\NormalTok{, }\FloatTok{3.2}\NormalTok{, }\FloatTok{3.4}\NormalTok{, }\FloatTok{3.6}\NormalTok{, }\FloatTok{3.8}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{4.2}\NormalTok{, }\FloatTok{4.4}\NormalTok{,}
+    \FloatTok{4.6}\NormalTok{, }\FloatTok{4.8}\NormalTok{, }\DecValTok{5}\NormalTok{, }\FloatTok{5.2}\NormalTok{, }\FloatTok{5.4}\NormalTok{, }\FloatTok{5.6}\NormalTok{, }\FloatTok{5.8}\NormalTok{, }\DecValTok{6}\NormalTok{, }\FloatTok{6.2}\NormalTok{, }\FloatTok{6.4}\NormalTok{, }\FloatTok{6.6}\NormalTok{, }\FloatTok{6.8}\NormalTok{, }\DecValTok{7}\NormalTok{,}
+    \FloatTok{7.2}\NormalTok{, }\FloatTok{7.4}\NormalTok{, }\FloatTok{7.6}\NormalTok{, }\FloatTok{7.8}\NormalTok{, }\DecValTok{8}\NormalTok{)}
+
+\NormalTok{x1\_obs\_ex5 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{0.0091}\NormalTok{, }\FloatTok{0.043}\NormalTok{, }\FloatTok{0.2}\NormalTok{, }\FloatTok{0.82}\NormalTok{, }\FloatTok{3.4}\NormalTok{, }\FloatTok{2.9}\NormalTok{, }\FloatTok{0.12}\NormalTok{, }\FloatTok{0.0077}\NormalTok{,}
+    \FloatTok{0.00093}\NormalTok{, }\FloatTok{0.00026}\NormalTok{, }\FloatTok{0.00014}\NormalTok{, }\FloatTok{0.00013}\NormalTok{, }\FloatTok{0.00015}\NormalTok{, }\FloatTok{0.00025}\NormalTok{, }\FloatTok{0.00054}\NormalTok{,}
+    \FloatTok{0.0015}\NormalTok{, }\FloatTok{0.0051}\NormalTok{, }\FloatTok{0.02}\NormalTok{, }\FloatTok{0.087}\NormalTok{, }\FloatTok{0.36}\NormalTok{, }\FloatTok{1.7}\NormalTok{, }\FloatTok{5.6}\NormalTok{, }\FloatTok{0.66}\NormalTok{, }\FloatTok{0.029}\NormalTok{,}
+    \FloatTok{0.0024}\NormalTok{, }\FloatTok{0.00048}\NormalTok{, }\FloatTok{0.00019}\NormalTok{, }\FloatTok{0.00012}\NormalTok{, }\FloatTok{0.00013}\NormalTok{, }\FloatTok{0.00019}\NormalTok{, }\FloatTok{0.00035}\NormalTok{,}
+    \FloatTok{0.001}\NormalTok{, }\FloatTok{0.003}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.041}\NormalTok{, }\FloatTok{0.19}\NormalTok{, }\FloatTok{0.88}\NormalTok{, }\FloatTok{3.8}\NormalTok{, }\FloatTok{3.2}\NormalTok{, }\FloatTok{0.13}\NormalTok{, }\FloatTok{0.0078}\NormalTok{)}
+
+\NormalTok{x2\_obs\_ex5 }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FloatTok{0.82}\NormalTok{, }\FloatTok{1.1}\NormalTok{, }\FloatTok{0.98}\NormalTok{, }\FloatTok{0.65}\NormalTok{, }\FloatTok{1.1}\NormalTok{, }\FloatTok{5.1}\NormalTok{, }\FloatTok{7.1}\NormalTok{, }\FloatTok{7.9}\NormalTok{, }\FloatTok{4.3}\NormalTok{,}
+    \FloatTok{3.5}\NormalTok{, }\FloatTok{3.8}\NormalTok{, }\FloatTok{3.9}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\FloatTok{2.1}\NormalTok{, }\FloatTok{1.6}\NormalTok{, }\FloatTok{1.4}\NormalTok{, }\FloatTok{1.2}\NormalTok{, }\DecValTok{1}\NormalTok{, }\FloatTok{0.92}\NormalTok{, }\FloatTok{0.57}\NormalTok{, }\FloatTok{0.73}\NormalTok{,}
+    \FloatTok{3.6}\NormalTok{, }\FloatTok{6.7}\NormalTok{, }\FloatTok{9.1}\NormalTok{, }\FloatTok{5.5}\NormalTok{, }\FloatTok{4.7}\NormalTok{, }\FloatTok{4.5}\NormalTok{, }\DecValTok{3}\NormalTok{, }\FloatTok{2.9}\NormalTok{, }\FloatTok{2.7}\NormalTok{, }\FloatTok{1.7}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{1.7}\NormalTok{, }\FloatTok{1.3}\NormalTok{,}
+    \FloatTok{0.98}\NormalTok{, }\FloatTok{0.98}\NormalTok{, }\FloatTok{0.84}\NormalTok{, }\FloatTok{1.6}\NormalTok{, }\FloatTok{6.5}\NormalTok{, }\FloatTok{8.2}\NormalTok{, }\FloatTok{7.7}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(deSolve)}
+
+\NormalTok{determine\_sse\_ex5 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(p) \{}
+
+    \CommentTok{\# first four input parameters are the kinetic}
+    \CommentTok{\# parameters of the model}
+\NormalTok{    newPars }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(p[}\DecValTok{1}\NormalTok{], p[}\DecValTok{2}\NormalTok{])}
+    \CommentTok{\# last tw parameters are the initial populations for x}
+    \CommentTok{\# and y, respectively}
+\NormalTok{    newState }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\AttributeTok{x1 =} \FloatTok{0.008792889}\NormalTok{, }\AttributeTok{x2 =} \FloatTok{1.595545}\NormalTok{)}
+
+    \CommentTok{\# time{-}grid is the same as before, no need to redefine}
+\NormalTok{    Time\_ex5 }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{8}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.2}\NormalTok{)}
+
+\NormalTok{    Time\_ex5}
+
+    \CommentTok{\# kinetics}
+\NormalTok{    newLotVmod }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(Time, State, newPars) \{}
+        \FunctionTok{with}\NormalTok{(}\FunctionTok{as.list}\NormalTok{(}\FunctionTok{c}\NormalTok{(State, newPars)), \{}
+\NormalTok{            dx1 }\OtherTok{=}\NormalTok{ x1 }\SpecialCharTok{*}\NormalTok{ (}\DecValTok{30} \SpecialCharTok{{-}}\NormalTok{ p[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{*}\NormalTok{ x2)}
+\NormalTok{            dx2 }\OtherTok{=} \SpecialCharTok{{-}}\NormalTok{x2 }\SpecialCharTok{*}\NormalTok{ (p[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{{-}} \DecValTok{6} \SpecialCharTok{*}\NormalTok{ x1)}
+            \FunctionTok{return}\NormalTok{(}\FunctionTok{list}\NormalTok{(}\FunctionTok{c}\NormalTok{(dx1, dx2)))}
+\NormalTok{        \})}
+\NormalTok{    \}}
+
+\NormalTok{    new\_out1 }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{ode}\NormalTok{(}\AttributeTok{func =}\NormalTok{ newLotVmod, }\AttributeTok{y =}\NormalTok{ newState,}
+        \AttributeTok{parms =}\NormalTok{ newPars, }\AttributeTok{times =}\NormalTok{ Time\_ex5, }\AttributeTok{method =} \StringTok{"radau"}\NormalTok{,}
+        \AttributeTok{atol =} \FloatTok{1e{-}06}\NormalTok{, }\AttributeTok{rtol =} \FloatTok{1e{-}06}\NormalTok{))}
+
+\NormalTok{    sse }\OtherTok{\textless{}{-}} \FunctionTok{sum}\NormalTok{((x1\_obs\_ex5 }\SpecialCharTok{{-}}\NormalTok{ new\_out1}\SpecialCharTok{$}\NormalTok{x1)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{sum}\NormalTok{((x2\_obs\_ex5 }\SpecialCharTok{{-}}
+\NormalTok{        new\_out1}\SpecialCharTok{$}\NormalTok{x2)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+    \FunctionTok{return}\NormalTok{(sse)}
+
+\NormalTok{\}}
+
+\CommentTok{\# recall the dataset}
+
+
+\CommentTok{\# define functions to draw values from the prior}
+\CommentTok{\# distributions}
+\NormalTok{draw\_beta }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min =} \DecValTok{2}\NormalTok{, }\AttributeTok{max =} \DecValTok{30}\NormalTok{))}
+\NormalTok{\}}
+\NormalTok{draw\_gamma }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{() \{}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{runif}\NormalTok{(}\DecValTok{1}\NormalTok{, }\AttributeTok{min =} \DecValTok{1}\NormalTok{, }\AttributeTok{max =} \DecValTok{4}\NormalTok{))}
+\NormalTok{\}}
+
+\CommentTok{\# sampling algorithm: returns the sampled values and}
+\CommentTok{\# whether this pair is accepted}
+\NormalTok{sample\_by\_rejection }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(n\_iterations, acceptance\_threshold) \{}
+\NormalTok{    accepted }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length =}\NormalTok{ n\_iterations)}
+\NormalTok{    sampled\_beta }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length =}\NormalTok{ n\_iterations, }\AttributeTok{mode =} \StringTok{"numeric"}\NormalTok{)}
+\NormalTok{    sampled\_gamma }\OtherTok{\textless{}{-}} \FunctionTok{vector}\NormalTok{(}\AttributeTok{length =}\NormalTok{ n\_iterations, }\AttributeTok{mode =} \StringTok{"numeric"}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{n\_iterations) \{}
+\NormalTok{        beta }\OtherTok{\textless{}{-}} \FunctionTok{draw\_beta}\NormalTok{()}
+\NormalTok{        gamma }\OtherTok{\textless{}{-}} \FunctionTok{draw\_gamma}\NormalTok{()}
+        \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{determine\_sse\_ex5}\NormalTok{(}\FunctionTok{c}\NormalTok{(beta, gamma)) }\SpecialCharTok{\textless{}}\NormalTok{ acceptance\_threshold) \{}
+\NormalTok{            accepted[i] }\OtherTok{\textless{}{-}} \DecValTok{1}
+\NormalTok{        \} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{            accepted[i] }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{        \}}
+        \CommentTok{\# accepted\_or\_rejected[i] =}
+        \CommentTok{\# accept\_or\_reject\_function(true\_data,}
+        \CommentTok{\# simulated\_data, acceptance\_threshold)}
+\NormalTok{        sampled\_beta[i] }\OtherTok{=}\NormalTok{ beta}
+\NormalTok{        sampled\_gamma[i] }\OtherTok{=}\NormalTok{ gamma}
+\NormalTok{    \}}
+    \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(}\AttributeTok{accepted =}\NormalTok{ accepted, }\AttributeTok{sampled\_betas =}\NormalTok{ sampled\_beta,}
+        \AttributeTok{sampled\_gammas =}\NormalTok{ sampled\_gamma)))}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{42}\NormalTok{)}
+
+\CommentTok{\# sample SSE values without any threshold}
+\NormalTok{sse\_values }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(}\DecValTok{500}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{500}\NormalTok{) \{}
+\NormalTok{  beta  }\OtherTok{\textless{}{-}} \FunctionTok{draw\_beta}\NormalTok{()}
+\NormalTok{  gamma }\OtherTok{\textless{}{-}} \FunctionTok{draw\_gamma}\NormalTok{()}
+\NormalTok{  sse\_values[i] }\OtherTok{\textless{}{-}} \FunctionTok{determine\_sse\_ex5}\NormalTok{(}\FunctionTok{c}\NormalTok{(beta, gamma))}
+\NormalTok{\}}
+
+\CommentTok{\# inspect the distribution of SSE values}
+\FunctionTok{summary}\NormalTok{(sse\_values)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+##  3.660e+02  4.490e+02  4.950e+02 1.978e+162  6.060e+02 8.470e+164
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{hist}\NormalTok{(sse\_values, }\AttributeTok{breaks =} \DecValTok{30}\NormalTok{, }\AttributeTok{main =} \StringTok{"Distribution of SSE values"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"SSE"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-16-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Minimum SSE:"}\NormalTok{, }\FunctionTok{min}\NormalTok{(sse\_values), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Minimum SSE: 365.5541
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"10th percentile:"}\NormalTok{, }\FunctionTok{quantile}\NormalTok{(sse\_values, }\FloatTok{0.10}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 10th percentile: 411.0695
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{new\_threshold }\OtherTok{\textless{}{-}} \FunctionTok{quantile}\NormalTok{(sse\_values, }\FloatTok{0.10}\NormalTok{)}
+
+\NormalTok{results }\OtherTok{\textless{}{-}} \FunctionTok{sample\_by\_rejection}\NormalTok{(}\AttributeTok{n\_iterations =} \DecValTok{5000}\NormalTok{, }\AttributeTok{acceptance\_threshold =}\NormalTok{ new\_threshold)}
+\NormalTok{results }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{apply}\NormalTok{(results, }\DecValTok{2}\NormalTok{, as.numeric))}
+
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Accepted:"}\NormalTok{, }\FunctionTok{sum}\NormalTok{(results}\SpecialCharTok{$}\NormalTok{accepted), }\StringTok{"out of"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(results), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Accepted: 346 out of 5000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{posterior }\OtherTok{\textless{}{-}}\NormalTok{ results[results}\SpecialCharTok{$}\NormalTok{accepted }\SpecialCharTok{==} \DecValTok{1}\NormalTok{, ]}
+
+\FunctionTok{hist}\NormalTok{(posterior}\SpecialCharTok{$}\NormalTok{sampled\_gammas,}
+     \AttributeTok{col    =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.20}\NormalTok{, }\FloatTok{0.40}\NormalTok{, }\FloatTok{0.68}\NormalTok{, }\FloatTok{0.8}\NormalTok{),}
+     \AttributeTok{border =} \FunctionTok{rgb}\NormalTok{(}\FloatTok{0.20}\NormalTok{, }\FloatTok{0.40}\NormalTok{, }\FloatTok{0.68}\NormalTok{, }\FloatTok{1.0}\NormalTok{),}
+     \AttributeTok{main   =} \FunctionTok{expression}\NormalTok{(}\StringTok{"Posterior of "} \SpecialCharTok{*}\NormalTok{ gamma),}
+     \AttributeTok{xlab   =} \FunctionTok{expression}\NormalTok{(gamma),}
+     \AttributeTok{ylab   =} \StringTok{"Count"}\NormalTok{,}
+     \AttributeTok{las    =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Week13_14-Optimization_files/figure-latex/unnamed-chunk-16-2.pdf}}
+
+\end{document}
